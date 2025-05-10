@@ -23,6 +23,127 @@ public class ProblemSetTest {
    }
    */
 
+  public static class Card {
+     private final String name;
+     private final String suit;
+     private final int value;
+
+
+     public Card(String name, String suit, int value) {
+      this.name = name;
+      this.suit = suit;
+      this.value = value;
+     }
+
+     public String getName() {
+      return name;
+     }
+
+     public String getSuit() {
+      return suit;
+     }
+
+     public int getValue() {
+      return value;
+     }
+
+     @Override
+     public String toString() {
+     return name + " of " + suit;
+     }
+
+
+     @Override
+     public boolean equals(Object obj) {
+      if (!(obj instanceof Card)) return false;
+      Card other = (Card) obj;
+      return name.equals(other.name) && suit.equals(other.suit) && value == other.value;
+       }
+
+    }
+
+     public static class Deck {
+      private final List<Card> cards;
+   
+      public Deck() {
+    cards = new ArrayList<>();
+     String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+      String[] names = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
+      for (String suit : suits) {
+    for (int i = 0; i < names.length; i++) {
+     cards.add(new Card(names[i], suit, i + 1));
+           }
+        }
+     }
+
+      public void shuffle() {
+        Collections.shuffle(cards);
+     }
+
+     public Card draw() {
+      if (!cards.isEmpty()) return cards.remove(0);
+      return null;
+     }
+
+     public void add(Card card) {
+      cards.add(card);
+     }
+
+     public int size() {
+      return cards.size();
+       }
+    }
+
+    public static class DiscardPile {
+        private final List<Card> pile = new ArrayList<>();
+
+        public void discard(Card card) {
+            pile.add(card);
+        }
+    }
+
+    public static class Player {
+        private final String name;
+        private final List<Card> hand;
+
+        public Player(String name) {
+            this.name = name;
+            this.hand = new ArrayList<>();
+        }
+
+        public int size() {
+            return hand.size();
+        }
+
+        public void draw(Deck deck) {
+            Card card = deck.draw();
+            if (card != null) hand.add(card);
+        }
+
+        public boolean discard(Card card, DiscardPile pile) {
+            if (hand.remove(card)) {
+                pile.discard(card);
+                return true;
+            }
+            return false;
+        }
+
+        public boolean returnCard(Card card, Deck deck) {
+            if (hand.remove(card)) {
+                deck.add(card);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public String toString() {
+      StringBuilder sb = new StringBuilder(name + ", " + hand.size() + ", ");
+            for (Card card : hand) sb.append(card.toString()).append(", ");
+            return sb.toString().trim();
+        }
+    }
+
 @Test
 public void testCardGetters()
 {
@@ -52,8 +173,7 @@ public void testCardGetters()
    }
 
    @Test 
-   public void
-testDeckInitialization()
+   public void testDeckInitialization()
    {
       Deck deck = new Deck();
       assertEquals(52,deck.size());
@@ -68,3 +188,52 @@ testDeckInitialization()
       assertEquals(51,deck.size());
    }
 }
+ public static class DiscardPile {
+        private final List<Card> pile = new ArrayList<>();
+
+        public void discard(Card card) {
+            pile.add(card);
+        }
+    }
+
+    public static class Player {
+        private final String name;
+        private final List<Card> hand;
+
+        public Player(String name) {
+            this.name = name;
+            this.hand = new ArrayList<>();
+        }
+
+        public int size() {
+            return hand.size();
+        }
+
+        public void draw(Deck deck) {
+            Card card = deck.draw();
+            if (card != null) hand.add(card);
+        }
+
+        public boolean discard(Card card, DiscardPile pile) {
+            if (hand.remove(card)) {
+                pile.discard(card);
+                return true;
+            }
+            return false;
+        }
+
+        public boolean returnCard(Card card, Deck deck) {
+            if (hand.remove(card)) {
+                deck.add(card);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder(name + ", " + hand.size() + ", ");
+            for (Card card : hand) sb.append(card.toString()).append(", ");
+            return sb.toString().trim();
+        }
+    }
